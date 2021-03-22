@@ -30,6 +30,7 @@ async function run(): Promise<void> {
       issue_number,
       body
     })
+
   } catch (error) {
     core.setFailed(error.message)
   }

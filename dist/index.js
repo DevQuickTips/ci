@@ -42,14 +42,25 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const context = github.context;
-            const token = core.getInput("repo-token", { required: true });
+            const { owner, repo } = context.issue;
+            const issue_number = context.issue.number;
+            const token = core.getInput('repo-token', { required: true });
             const octokit = github.getOctokit(token);
             core.debug(context.issue.number.toString());
+            let labels = yield octokit.issues.listLabelsOnIssue({
+                owner,
+                repo,
+                issue_number
+            });
+            let body = '';
+            for (let label in labels) {
+                body += label + "\n";
+            }
             yield octokit.issues.createComment({
-                owner: context.issue.owner,
-                repo: context.issue.repo,
-                issue_number: context.issue.number,
-                body: "Hello, World!"
+                owner,
+                repo,
+                issue_number,
+                body
             });
         }
         catch (error) {
