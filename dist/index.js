@@ -83,7 +83,7 @@ function onAccepted() {
             owner,
             repo,
             issue_number,
-            body: 'Your submission was published!'
+            body: 'Your submission was accepted! It will be published soon.'
         });
     });
 }
