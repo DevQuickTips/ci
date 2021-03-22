@@ -20,8 +20,8 @@ async function run(): Promise<void> {
 
     let body = ''
 
-    for (const label in labels) {
-      body += `${label}\n`
+    for (const label of labels.data) {
+      body += `${label.name}\n`
     }
 
     await octokit.issues.createComment({
@@ -30,7 +30,6 @@ async function run(): Promise<void> {
       issue_number,
       body
     })
-
   } catch (error) {
     core.setFailed(error.message)
   }

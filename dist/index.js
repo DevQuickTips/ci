@@ -47,14 +47,14 @@ function run() {
             const token = core.getInput('repo-token', { required: true });
             const octokit = github.getOctokit(token);
             core.debug(context.issue.number.toString());
-            let labels = yield octokit.issues.listLabelsOnIssue({
+            const labels = yield octokit.issues.listLabelsOnIssue({
                 owner,
                 repo,
                 issue_number
             });
             let body = '';
-            for (let label in labels) {
-                body += label + "\n";
+            for (let label of labels.data) {
+                body += label.name + "\n";
             }
             yield octokit.issues.createComment({
                 owner,
