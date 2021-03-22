@@ -1,0 +1,6 @@
+name: 'DevQuickTips'
+description: 'CI System for DevQuickTips'
+author: 'MarvinJWendt'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
