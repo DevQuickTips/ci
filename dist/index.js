@@ -38,34 +38,53 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(186));
 const github = __importStar(__webpack_require__(438));
+const context = github.context;
+const { owner, repo } = context.issue;
+const issue_number = context.issue.number;
+const token = core.getInput('repo-token', { required: true });
+const octokit = github.getOctokit(token);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const context = github.context;
-            const { owner, repo } = context.issue;
-            const issue_number = context.issue.number;
-            const token = core.getInput('repo-token', { required: true });
-            const octokit = github.getOctokit(token);
             core.debug(context.issue.number.toString());
             const labels = yield octokit.issues.listLabelsOnIssue({
                 owner,
                 repo,
                 issue_number
             });
-            let body = '';
-            for (let label of labels.data) {
-                body += label.name + "\n";
+            const labelNames = labels.data.map(e => e.name);
+            if (labelNames.includes('published'))
+                return;
+            for (const label of labels.data) {
+                if (label.name === 'publish')
+                    yield onPublish();
+                else if (label.name === 'accepted')
+                    yield onAccepted();
             }
-            yield octokit.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body
-            });
         }
         catch (error) {
             core.setFailed(error.message);
         }
+    });
+}
+function onPublish() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield octokit.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body: 'Your submission was published!'
+        });
+    });
+}
+function onAccepted() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield octokit.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body: 'Your submission was published!'
+        });
     });
 }
 run();
