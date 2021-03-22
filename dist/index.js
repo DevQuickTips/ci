@@ -69,6 +69,24 @@ function run() {
 }
 function onPublish() {
     return __awaiter(this, void 0, void 0, function* () {
+        yield octokit.issues.removeLabel({
+            owner,
+            repo,
+            issue_number,
+            name: "publish"
+        });
+        yield octokit.issues.removeLabel({
+            owner,
+            repo,
+            issue_number,
+            name: "accepted"
+        });
+        yield octokit.issues.addLabels({
+            owner,
+            repo,
+            issue_number,
+            labels: ["published"]
+        });
         yield octokit.issues.createComment({
             owner,
             repo,

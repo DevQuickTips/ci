@@ -31,6 +31,27 @@ async function run(): Promise<void> {
 }
 
 async function onPublish(): Promise<void> {
+  await octokit.issues.removeLabel({
+    owner,
+    repo,
+    issue_number,
+    name: 'publish'
+  })
+
+  await octokit.issues.removeLabel({
+    owner,
+    repo,
+    issue_number,
+    name: 'accepted'
+  })
+
+  await octokit.issues.addLabels({
+    owner,
+    repo,
+    issue_number,
+    labels: ['published']
+  })
+
   await octokit.issues.createComment({
     owner,
     repo,
