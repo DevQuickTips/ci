@@ -12,19 +12,17 @@ async function run(): Promise<void> {
     const octokit = github.getOctokit(token)
     core.debug(context.issue.number.toString())
 
-    let labels = octokit.issues.listLabelsOnIssue({
+    const labels = await octokit.issues.listLabelsOnIssue({
       owner,
       repo,
       issue_number
     })
 
-    let body = ""
+    let body = ''
 
-    labels.then(e => {
-      for (let eKey in e) {
-        body += eKey + "\n"
-      }
-    })
+    for (const label in labels) {
+      body += `${label}\n`
+    }
 
     await octokit.issues.createComment({
       owner,
@@ -32,7 +30,6 @@ async function run(): Promise<void> {
       issue_number,
       body
     })
-
   } catch (error) {
     core.setFailed(error.message)
   }
