@@ -20,11 +20,8 @@ async function run(): Promise<void> {
     const labelNames = labels.data.map(e => e.name)
 
     if (labelNames.includes('published')) return
-
-    for (const label of labels.data) {
-      if (label.name === 'publish') await onPublish()
-      else if (label.name === 'accepted') await onAccepted()
-    }
+    else if (labelNames.includes('publish')) await onPublish()
+    else if (labelNames.includes('accepted')) await onAccepted()
   } catch (error) {
     core.setFailed(error.message)
   }

@@ -55,12 +55,10 @@ function run() {
             const labelNames = labels.data.map(e => e.name);
             if (labelNames.includes('published'))
                 return;
-            for (const label of labels.data) {
-                if (label.name === 'publish')
-                    yield onPublish();
-                else if (label.name === 'accepted')
-                    yield onAccepted();
-            }
+            else if (labelNames.includes('publish'))
+                yield onPublish();
+            else if (labelNames.includes('accepted'))
+                yield onAccepted();
         }
         catch (error) {
             core.setFailed(error.message);
@@ -73,19 +71,19 @@ function onPublish() {
             owner,
             repo,
             issue_number,
-            name: "publish"
+            name: 'publish'
         });
         yield octokit.issues.removeLabel({
             owner,
             repo,
             issue_number,
-            name: "accepted"
+            name: 'accepted'
         });
         yield octokit.issues.addLabels({
             owner,
             repo,
             issue_number,
-            labels: ["published"]
+            labels: ['published']
         });
         yield octokit.issues.createComment({
             owner,
